@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+import React, {useState} from 'react';
+import { Container, Row, Col } from 'react-bootstrap';
+import Form from './components/form/form';
+import Table from './components/table/table'
 import './App.css';
 
 function App() {
+  const [tableData, setTableData] = useState([]);
+
+  function handleFormSubmit(formData){
+    setTableData([...tableData, formData]);
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Row>
+        <Col>
+        <Form onSubmit={handleFormSubmit} />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+        <Table data={tableData} />
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
