@@ -14,12 +14,12 @@ function App() {
     <Container>
       <Row>
         <Col>
-        <Form onSubmit={handleFormSubmit} />
+          <Form onSubmit={handleFormSubmit} />
         </Col>
       </Row>
       <Row>
         <Col>
-        <Table data={tableData} />
+          <Table data={tableData} />
         </Col>
       </Row>
     </Container>
