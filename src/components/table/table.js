@@ -3,6 +3,7 @@ import Table from 'react-bootstrap/Table';
 
 function table() {
   return (
+    <div className='container'>
     <Table striped bordered hover>
       <thead>
         <tr>
@@ -32,6 +33,7 @@ function table() {
         </tr>
       </tbody>
     </Table>
+    </div>
   );
 }
 
