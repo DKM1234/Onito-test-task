@@ -1,41 +1,53 @@
-import React from 'react'
-import Table from 'react-bootstrap/Table';
+import React, { useState, useEffect } from 'react';
+import { Table } from 'react-bootstrap';
 
-function table() {
+function MyTable() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetch('https://95efqh7zh3.execute-api.ap-south-1.amazonaws.com/user')
+      .then(response => response.json())
+      .then(data => setData(data));
+  }, []);
+
   return (
-    <div className='container'>
-    <Table striped bordered hover>
+    <Table striped bordered hover
+    className='container mt-2'
+    >
       <thead>
         <tr>
-          <th>#</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Username</th>
+          <th>Name</th>
+          <th>D.O.B.</th>
+          <th>Sex</th>
+          <th>Email</th>
+          <th>Mobile No.</th>
+          <th>Govt.ID</th>
+          <th>Address</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Country</th>
+          <th>Pincode</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>1</td>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td colSpan={2}>Larry the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {data.map(item => (
+          <tr key={item.id}>
+            <td>{item.name}</td>
+            <td>{item.dateOfBirthOrAge}</td>
+            <td>{item.sex}</td>
+            <td>{item.email}</td>
+            <td>{item.mobileNumber}</td>
+            <td>{item.governmentId}</td>
+            <td>{item.address}</td>
+            <td>{item.city}</td>
+            <td>{item.state}</td>
+            <td>{item.country}</td>
+            <td>{item.pinCode}</td>
+          </tr>
+        ))}
       </tbody>
     </Table>
-    </div>
   );
 }
 
-export default table;
-
+export default MyTable;

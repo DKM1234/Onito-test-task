@@ -34,7 +34,7 @@ function FormComponent() {
     event.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:8000/form-data",
+        "https://95efqh7zh3.execute-api.ap-south-1.amazonaws.com/user",
         formData
       );
       console.log(response.data);
