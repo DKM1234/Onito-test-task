@@ -3,6 +3,37 @@ import axios from "axios";
 import { Form, Button, Row, Col } from "react-bootstrap";
 
 function FormComponent() {
+  const [idName, setIdName] = useState("");
+  const [idNumber, setIdNumber] = useState("");
+
+  const handleIdNameChange = (event) => {
+    setIdName(event.target.value);
+    setIdNumber("");
+  };
+
+  const handleIdNumberChange = (event) => {
+    const inputValue = event.target.value;
+    if (idName === "aadhar") {
+      const numericInputValue = inputValue.replace(/[^0-9]/g, "");
+      setIdNumber(numericInputValue);
+    } else if (idName === "pan") {
+      const uppercaseInputValue = inputValue.toUpperCase();
+      setIdNumber(uppercaseInputValue);
+    } else {
+      setIdNumber(inputValue);
+    }
+  };
+
+  const getPlaceholder = () => {
+    if (idName === "aadhar") {
+      return "Enter Aadhar Number";
+    } else if (idName === "pan") {
+      return "Enter PAN Number";
+    } else {
+      return "Enter Govt ID";
+    }
+  };
+
   const [formData, setFormData] = useState({
     name: "",
     dateOfBirthOrAge: "",
@@ -38,9 +69,36 @@ function FormComponent() {
         formData
       );
       console.log(response.data);
+
+      reset();
+      // alert('Data Sent Successfully, Go To Table');
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const reset = () => {
+    setFormData({
+      name: "",
+      dateOfBirthOrAge: "",
+      sex: "",
+      mobileNumber: "",
+      governmentId: "",
+      graduationDetails: "",
+      formGraduationName: "",
+      email: "",
+      emergencyContactNumber: "",
+      address: "",
+      state: "",
+      city: "",
+      country: "",
+      pinCode: "",
+      occupation: "",
+      religion: "",
+      marriedStatus: "",
+      bloodGroup: "",
+      nationality: "",
+    });
   };
 
   return (
@@ -76,12 +134,22 @@ function FormComponent() {
               Date of Birth or Age<span style={{ color: "red" }}>*</span>
             </Form.Label>
             <Form.Control
-              type="date"
+              type="text"
               name="dateOfBirthOrAge"
-              value={formData.dateOfBirthOrAge}
               placeholder="DD/MM/YYYY or Age in Years"
+              value={formData.dateOfBirthOrAge}
               onChange={handleChange}
+              onFocus={(e) => (e.currentTarget.type = "date")}
+              onBlur={(e) => {
+                if (e.currentTarget.value === "") {
+                  e.currentTarget.type = "text";
+                  e.currentTarget.value = "DD/MM/YYYY or Age in Years";
+                } else {
+                  e.currentTarget.type = "date";
+                }
+              }}
               required
+              pattern="\d{1,2}/\d{1,2}/\d{4}"
             />
           </Form.Group>
         </Col>
@@ -109,44 +177,54 @@ function FormComponent() {
           <Form.Group controlId="formMobileNumber">
             <Form.Label>Mobile</Form.Label>
             <Form.Control
-              type="text"
+              type="tel"
               name="mobileNumber"
               value={formData.mobileNumber}
               placeholder="Enter Mobile"
               onChange={handleChange}
+              pattern="^(\+91|0)?[6789]\d{9}$"
               required
             />
           </Form.Group>
         </Col>
         <Col>
-          <Form.Group controlId="formGovernmentId">
+          <Form.Group controlId="formGovernmentIdName">
             <Form.Label>Government ID</Form.Label>
             <Form.Select
               name="governmentId"
-              value={formData.governmentId}
-              onChange={handleChange}
+              value={idName}
+              onChange={handleIdNameChange}
               required
             >
               <option value="">Select ID</option>
-              <option value="addhar">ADDHAR</option>
-              <option value="pan">PAN</option>
+              <option value="aadhar">Aadhar</option>
+              <option value="pan">Pan</option>
             </Form.Select>
           </Form.Group>
         </Col>
         <Col>
-          <Form.Group controlId="formGovernmentId">
+          <Form.Group controlId="formGovernmentIdNumber">
             <Form.Label>ID Number</Form.Label>
             <Form.Control
-              type="phone"
-              name="governmentId"
-              value={formData.governmentId}
-              onChange={handleChange}
-              placeholder="Enter Govt ID"
+              type="text"
+              name="governmentIdNumber"
+              value={idNumber}
+              onChange={handleIdNumberChange}
+              placeholder={getPlaceholder()}
+              maxLength={idName === "aadhar" ? 12 : 10}
+              minLength={idName === "aadhar" ? 12 : 10}
+              pattern={idName === "aadhar" ? "[0-9]{12}" : "[A-Z0-9]{10}"}
+              title={
+                idName === "aadhar"
+                  ? "Aadhar number must be 12 digits"
+                  : "PAN number must be 10 characters (capital letters and numbers only)"
+              }
               required
             />
           </Form.Group>
         </Col>
       </Row>
+
       <h5 className="mb-2 mt-4">
         <u>Contact Detail</u>
       </h5>
@@ -201,6 +279,7 @@ function FormComponent() {
               placeholder="Enter Emergency Number"
               value={formData.emergencyContactNumber}
               onChange={handleChange}
+              pattern="^(\+91|0)?[6789]\d{9}$"
               required
             />
           </Form.Group>
@@ -281,7 +360,12 @@ function FormComponent() {
               name="pinCode"
               value={formData.pinCode}
               placeholder="Enter Pincode"
-              onChange={handleChange}
+              onChange={(e) => {
+                const re = /^[0-9\b]{0,6}$/;
+                if (e.target.value === "" || re.test(e.target.value)) {
+                  handleChange(e);
+                }
+              }}
               required
             />
           </Form.Group>
@@ -395,7 +479,12 @@ function FormComponent() {
         </Col>
       </Row>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <Button variant="danger" type="reset" className="mb-4 mt-4">
+        <Button
+          variant="danger"
+          type="button"
+          onClick={reset}
+          className="mb-4 mt-4"
+        >
           Cancel
         </Button>
         &nbsp;&nbsp;&nbsp;

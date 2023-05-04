@@ -1,5 +1,6 @@
 import React from 'react';
 import './no-page.css';
+import { Link } from 'react-router-dom';
 
 const nopage = () => {
   return (
@@ -20,7 +21,9 @@ const nopage = () => {
 		</h3>
 		
 		<p>the page you are looking for not avaible!</p>
+
 		
+		<Link to="https://onito-test-task-4afa1.web.app">Go To Home Page</Link>
 		
 	</div>
 		</div>
